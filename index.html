@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+        <script src="boing.js"></script>
+    </head>
+    <body>
+        <h1>jsBoing 0.1</h1>
+        <div id="viewport">
+            <canvas id="screen" width="320" height="200"></canvas>
+        </div>
+        <form id="controls" action="#" method="get">
+            <fieldset id="worldParameters">
+                <legend>World</legend>
+                <label>Background: <input type="color" name="backgroundColor" id="backgroundColor" value="#AAAAAA"></label>
+            </fieldset>
+            <fieldset id="gridParameters">
+                <legend>Grid</legend>
+                <label>Lines: <input type="color" name="gridColor" id="gridColor" value="#660066"></label>
+                <label>Rows: <input type="number" name="rows" id="rows" value="15" min="2"></label>
+                <label>Columns: <input type="number" name="columns" id="columns" value="15" min="2"></label>
+                <label>Volumes: <input type="number" name="voxes" id="voxes" value="4" min="2"></label>
+            </fieldset>
+            <fieldset id="ballParameters">
+                <legend>Ball</legend>
+                <label>Shadow: <input type="color" name="shadowColor" id="shadowColor" value="#666666"></label>
+                <label>Color A: <input type="color" name="ballColorA" id="ballColorA" value="#FF0000"></label>
+                <label>Color B: <input type="color" name="ballColorB" id="ballColorB" value="#FFFFFF"></label>
+                <label>Parallels: <input type="number" name="parallels" id="parallels" value="8" min="1"></label>
+                <label>Meridians: <input type="number" name="meridians" id="meridians" value="8" min="1"></label>
+                <label>Pitch: <input type="range" name="ballPitch" id="ballPitch" value="0" min="0" max="31" step="1"></label>
+                <label>Roll: <input type="number" name="ballRoll" id="ballRoll" value="4" min="0" max="31" step="1"></label>
+            </fieldset>
+            <button type="button" id="resetMachine">Reconfigure</button>
+            <button type="reset" id="restoreDefaults">Defaults</button>
+            <label>Show Guide: <input type="checkbox" name="showGuide" id="showGuide"></label>
+        </form>
+    </body>
+</html>
