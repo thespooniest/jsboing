@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 What is jsBoing?
 ================
 jsBoing is a clone of the famous "Boing!" demo, originally written for the Commodore Amiga.
@@ -68,3 +69,9 @@ Special Thanks To...
 - Michael J. Norton, for his article "Build a Simple 3D Pipeline in Tcl", which provided some initial inspiration and help with equations.
 - Jimmy Maher, author of *The Future Was Here*, a text that included a wealth of information on the Amiga and a re-creation of Boing! in C. The assembly-language source to the original Boing! can also be found at his Website.
 
+=======
+jsboing
+=======
+
+Yet another Boing! clone
+>>>>>>> 51ffb8efaee64711086c36ab9d622ee4ec8b560d
