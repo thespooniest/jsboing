@@ -1,18 +1,18 @@
-SRCDIR=src
-BUILDDIR=build
-LINTDIR=$(BUILDDIR)/lint
-TESTDIR=$(BUILDDIR)/test
-SRCFILES=$(wildcard $(SRCDIR)/*.js)
-LINTFILES=$(patsubst $(SRCDIR)/%.js,$(LINTDIR)/%.ln,$(SRCFILES))
+SRCDIR:=src
+BUILDDIR:=build
+LINTDIR:=$(BUILDDIR)/lint
+TESTDIR:=$(BUILDDIR)/test
+SRCFILES:=$(wildcard $(SRCDIR)/*.js)
+LINTFILES:=$(patsubst $(SRCDIR)/%.js,$(LINTDIR)/%.ln,$(SRCFILES))
 
-MAIN=$(BUILDDIR)/boing.js
+MAIN:=$(BUILDDIR)/boing.js
 
-RHINO=rhino
-JSLINT=$(RHINO) bin/lint.js
-JSLINTFLAGS=-fbrowser-globals -Wno-bitwise-operators -Dconsole -Ddefine -Drequire
+RHINO:=rhino
+JSLINT:=$(RHINO) bin/lint.js
+JSLINTFLAGS:=-fbrowser-globals -Wno-bitwise-operators -Dconsole -Ddefine -Drequire
 
-YUICOMPRESSOR=yui-compressor
-YCFLAGS=
+YUICOMPRESSOR:=yui-compressor
+YCFLAGS:=
 
 .PHONY: all install help clean test help
 
@@ -25,14 +25,14 @@ help:
 install: $(MAIN)
 	cp $(MAIN) .
 	$(YUICOMPRESSOR) $(YCFLAGS) $(MAIN) -o boing.min.js
-	gzip -c boing.min.js >boing.min.js.gz
+	gzip -c boing.min.js > boing.min.js.gz
 
 clean:
 	rm -f boing.js boing.min.js boing.min.js.gz
 	rm -rf $(BUILDDIR)
 
-$(LINTDIR)/%.ln: $(SRCDIR)/%.js
-	$(JSLINT) $(JSLINTFLAGS) $^ -o $@
+$(LINTDIR)/%.ln: $(SRCDIR)/%.js $(LINTDIR)
+	$(JSLINT) $(JSLINTFLAGS) $< > $@
 
 $(BUILDDIR):
 	mkdir $(BUILDDIR)

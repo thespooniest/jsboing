@@ -84,7 +84,7 @@ var SyntaxTreeVisitor = function () {
     };
 
     /**
-     * The visit____ family of functions 
+     * The visit____ family of functions
      *
      * @param {Object} node The node being visited.
      */
