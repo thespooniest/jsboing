@@ -1,7 +1,5 @@
 html {
     font-family: sans-serif;
-    color: #CCC;
-    background-color: #333;
 }
 
 h1, canvas {
@@ -11,7 +9,6 @@ h1, canvas {
 
 #controls {
     text-align: center;
-    border: 1px dotted red;
     position: absolute;
     top: 6px;
     right: 6px;

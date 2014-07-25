@@ -784,7 +784,7 @@ define('pipeline3D', ['ruy', 'exports'], function (ruy, exports) {
             }
             context.closePath();
             context.fill();
-            context.stroke();
+            //context.stroke();
         });
     }
 
@@ -1205,7 +1205,7 @@ define('assets', ['pipeline3D', 'exports'], function (pipeline3D, exports) {
         var result = document.createElement('canvas');
         result.width = Math.min(screen.canvas.height, screen.canvas.width) / 2;
         result.height = result.width;
-        pipeline3D.drawModelWire(
+        pipeline3D.drawModelFlat(
             result,
             model,
             distance,
@@ -1343,7 +1343,7 @@ define('BoingWorld', ['assets', 'pipeline3D'], function (assets, pipeline3D) {
             assets.sprites.ball = [];
         }
         if (!!options.ballRoll && !isNaN(options.ballRoll)) {
-            ballRoll = (Math.PI / 16) * options.ballRoll | 0;
+            ballRoll = (Math.PI / 16) * (options.ballRoll | 0);
             assets.models.ball = null;
             assets.sprites.shadow = [];
             assets.sprites.ball = [];
@@ -1594,7 +1594,6 @@ define('BoingWorld', ['assets', 'pipeline3D'], function (assets, pipeline3D) {
                     assets.materials.shadow
                 )
             );
-            document.body.appendChild(assets.sprites.ball[assets.sprites.ball.length - 1]);
         } else {
             // Draw the back grid.
             this.machine.getLayer(0).clearRect(0, 0, this.width, this.height);
@@ -1637,6 +1636,7 @@ require(['Machine', 'BoingWorld'], function (Machine, BoingWorld) {
                         'showGuide': evt.target.checked
                     });
                     evt.stopPropagation();
+                    machine.getLayer(3).clearRect(0, 0, machine.screen.width, machine.screen.height);
                     return false;
                 }
             },

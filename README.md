@@ -1,13 +1,13 @@
 what is jsBoing?
-================
+----------------
 jsBoing is an attempt to re-create, in the browser, the famous Boing! demo for the original Amiga 1000.
 
 What does it require?
-=====================
+---------------------
 Currently, support for Canvas and requestAnimationFrame should be all that this needs to run. It also requires Rhino and YUI Compressor to build.
 
 What's different from Boing?
-============================
+----------------------------
 Some differences are obvious. jsBoing is written in JavaScript instead of 680x0 assembly language. We render using an HTML5 canvas instead of Intuition (the Amiga's graphics library). Our rendering and physics are driven by callbacks to requestAnimationFrame (or an oversimplified polyfill) instead of a loop. We render in full 32-bit color, instead of the Amiga's 4-bit, because the HTML5 canvas will not let us change the bit depth. These are basic, boring logistical matters, but they're differences. Of more interest are the cheats.
 
 When feasible, we use the same kinds of cheats that Boing! did. But because the Amiga's hardware is so different from what's provided in a modern JavaScript environment, not all of those cheats make sense. We still try to hold to the spirit of the Boing! demo, however, in picking analogous ways to cheat.
@@ -21,7 +21,7 @@ Despite the differences in the real-time system, we do still attempt to mirror B
 We also allow you to "pull back the curtain" in certain ways, to better understand how the cheats work.
 
 What's the same as Boing?
-=========================
+-------------------------
 Although we do have to depart from Boing! in a number of ways, we try to stay similar where feasible (and sensible).
 - The system is fundamentally 2-D, using pre-rendered sprites that make it look like 3-D.
 - All graphics are rendered programmatically at boot time: there are no additional images to download.
@@ -29,15 +29,19 @@ Although we do have to depart from Boing! in a number of ways, we try to stay si
 - Physics, like rendering, is locked to the frame rate: slow the rendering, slow the animation.
 
 Why do this?
-============
+------------
 Mostly because I wanted to learn more about graphics, physics, and demos. It's been a blast.
 
+Issues
+------
+Backface culling is still not working right, especially at non-default pitch.
+
 License
-=======
+-------
 This code is dedicated to the public domain wherever feasible, under the [Creative Commons Zero 1.0 Universal Public Domain Dedication][CC0].
 
 Acknowledgments
-===============
+---------------
 Very special thinks to [Robert J. Mical][Mical] and Dale Luck, for the original Boing! demo.
 
 Thanks to Jimmy Maher for [his re-creation of Boing! in C][Maher]. I didn't wind up using any significant code, but it was invaluable in figuring out some of the fiddly particulars.

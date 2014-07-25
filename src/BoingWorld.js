@@ -106,7 +106,7 @@ define('BoingWorld', ['assets', 'pipeline3D'], function (assets, pipeline3D) {
             assets.sprites.ball = [];
         }
         if (!!options.ballRoll && !isNaN(options.ballRoll)) {
-            ballRoll = (Math.PI / 16) * options.ballRoll | 0;
+            ballRoll = (Math.PI / 16) * (options.ballRoll | 0);
             assets.models.ball = null;
             assets.sprites.shadow = [];
             assets.sprites.ball = [];
@@ -357,7 +357,6 @@ define('BoingWorld', ['assets', 'pipeline3D'], function (assets, pipeline3D) {
                     assets.materials.shadow
                 )
             );
-            document.body.appendChild(assets.sprites.ball[assets.sprites.ball.length - 1]);
         } else {
             // Draw the back grid.
             this.machine.getLayer(0).clearRect(0, 0, this.width, this.height);

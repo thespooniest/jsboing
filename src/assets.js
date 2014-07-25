@@ -260,7 +260,7 @@ define('assets', ['pipeline3D', 'exports'], function (pipeline3D, exports) {
         var result = document.createElement('canvas');
         result.width = Math.min(screen.canvas.height, screen.canvas.width) / 2;
         result.height = result.width;
-        pipeline3D.drawModelWire(
+        pipeline3D.drawModelFlat(
             result,
             model,
             distance,

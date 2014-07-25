@@ -27,6 +27,7 @@ require(['Machine', 'BoingWorld'], function (Machine, BoingWorld) {
                         'showGuide': evt.target.checked
                     });
                     evt.stopPropagation();
+                    machine.getLayer(3).clearRect(0, 0, machine.screen.width, machine.screen.height);
                     return false;
                 }
             },

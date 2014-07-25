@@ -227,7 +227,7 @@ define('pipeline3D', ['ruy', 'exports'], function (ruy, exports) {
             }
             context.closePath();
             context.fill();
-            context.stroke();
+            //context.stroke();
         });
     }
 
@@ -261,7 +261,7 @@ define('pipeline3D', ['ruy', 'exports'], function (ruy, exports) {
             }
             return 0;
         });
-        faces.slice(0, faces.length / 2 | 0).forEach(function (face) {
+        faces.forEach(function (face) {
             var i = 1,
                 vertices = face.vertices,
                 stop = vertices.length;

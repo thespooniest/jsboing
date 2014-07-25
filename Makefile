@@ -9,12 +9,14 @@ MAIN:=$(BUILDDIR)/boing.js
 
 RHINO:=rhino
 JSLINT:=$(RHINO) bin/lint.js
-JSLINTFLAGS:=-fbrowser-globals -Wno-bitwise-operators -Dconsole -Ddefine -Drequire
+JSLINTFLAGS:=-fbrowser-globals -Wno-bitwise-operators -Ddefine -Drequire
 
 YUICOMPRESSOR:=yui-compressor
 YCFLAGS:=
 
-.PHONY: all install help clean test help
+GZIP:=/usr/bin/env gzip
+GZFLAGS:=-9
+
 
 all: $(MAIN)
 
@@ -25,20 +27,20 @@ help:
 install: $(MAIN)
 	cp $(MAIN) .
 	$(YUICOMPRESSOR) $(YCFLAGS) $(MAIN) -o boing.min.js
-	gzip -c boing.min.js > boing.min.js.gz
+	$(GZIP) $(GZFLAGS) -c boing.min.js > boing.min.js.gz
 
 clean:
 	rm -f boing.js boing.min.js boing.min.js.gz
 	rm -rf $(BUILDDIR)
 
-$(LINTDIR)/%.ln: $(SRCDIR)/%.js $(LINTDIR)
+$(LINTDIR)/%.ln: $(SRCDIR)/%.js $(BUILDDIR)
 	$(JSLINT) $(JSLINTFLAGS) $< > $@
 
 $(BUILDDIR):
 	mkdir $(BUILDDIR)
-
-$(LINTDIR): $(BUILDDIR)
 	mkdir $(LINTDIR)
 
 $(MAIN): $(LINTFILES)
 	cat $(SRCDIR)/modules.js $(SRCDIR)/Machine.js $(SRCDIR)/ruy.js $(SRCDIR)/pipeline3d.js $(SRCDIR)/assets.js $(SRCDIR)/BoingWorld.js $(SRCDIR)/main.js > $@
+
+.PHONY: all install help clean test help
