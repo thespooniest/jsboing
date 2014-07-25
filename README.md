@@ -1,77 +1,55 @@
-<<<<<<< HEAD
-What is jsBoing?
+what is jsBoing?
 ================
-jsBoing is a clone of the famous "Boing!" demo, originally written for the Commodore Amiga.
+jsBoing is an attempt to re-create, in the browser, the famous Boing! demo for the original Amiga 1000.
 
-What can it run on?
-===================
-The short version is that it should work on at least the following browsers:
-- Firefox 23 or later
-- Chrome 24 or later
-- Internet Explorer 10 or later
-- Safari 6.1 or later
-
-At a minimum, jsBoing needs support for the W3C event model, the canvas tag, and requestAnimationFrame(). 
-
-Why clone Boing?
-================
-Because I wanted to learn more about computer graphics and demos.
-
-It also helped me gain appreciation for just how much modern operating systems and environments actually do for us. The original Boing!s source code clocked in at over 3000 lines of uncommented 68K assembler; we clock in at under 1000 lines of generously commented JavaScript. Even in terms of file size, our source code is only some 20% as large as Boing!'s, and when minified and gzipped, our code is actually smaller than the 68K machine code version.
-
-I could not, of course, port the original Boing!'s source code, which was written in 68K assembler with the advantage of direct hardware access. Browser graphics work according to a fundamentally different model, and so my code ends up being drastically different from Boing!'s in a number of ways. But I did try to use corresponding algorithms and tricks, when it was feasible to do so, so you may still find it useful if you want to understand the way Boing! works. Just be aware that it does not come too close.
+What does it require?
+=====================
+Currently, support for Canvas and requestAnimationFrame should be all that this needs to run. It also requires Rhino and YUI Compressor to build.
 
 What's different from Boing?
 ============================
-To the untrained eye, Boing! runs on a 7 MHz Motorola 68000 processor, handling realtime physics and 3D graphics while multitasking, all without skipping a beat. The naysayers came out in force: they said it was impossible for a machine like this to do the things it seemed to be doing. More than one person started looking around the original demo booth, trying to find the hidden VCR.
+Some differences are obvious. jsBoing is written in JavaScript instead of 680x0 assembly language. We render using an HTML5 canvas instead of Intuition (the Amiga's graphics library). Our rendering and physics are driven by callbacks to requestAnimationFrame (or an oversimplified polyfill) instead of a loop. We render in full 32-bit color, instead of the Amiga's 4-bit, because the HTML5 canvas will not let us change the bit depth. These are basic, boring logistical matters, but they're differences. Of more interest are the cheats.
 
-The VCR was never found, of course: Boing! really did run on that machine. But the naysayers were right in one important aspect: it was impossible. Boing! cheated shamelessly to achieve the effects that it did.
+When feasible, we use the same kinds of cheats that Boing! did. But because the Amiga's hardware is so different from what's provided in a modern JavaScript environment, not all of those cheats make sense. We still try to hold to the spirit of the Boing! demo, however, in picking analogous ways to cheat.
 
-We strive to achieve the same spirit that Boing! did, and so, much like Boing!, we cheat. We do our best, in fact, to cheat in all the same places Boing! did. We do not, however, cheat in all the same *ways* that Boing! did, simply because some were of these ways were not feasible for a small JavaScript demo: the system abstracts out so much that it no longer makes sense to do the work to un-abstract it back.
+To someone versed in how early video game graphics work, it might seem as though Boing! renders the ball as a sprite and the grid as the background, but it's actually the opposite: the ball is the background, and the grid is made with sprites. In fact, the ball is a single static image, using a carefully-chosen set of colors and an animated palette to achieve the illusion of a spinning ball. The background is then scrolled to move the ball, while the sprites are held in place.
 
-Perhaps the way in which we're most like Boing! is that while we use proper 3D projection to determine the bounds of the "room", we only do it once: at startup, before the actual demo begins. The result, much like with Boing!, is that we incur a considerable startup delay, but take very little CPU time when the demo is actually running.
+JavaScript's canvas doesn't understand concepts like sprites, backgrounds, and color palettes, so it doesn't make as much sense for jsBoing to work quite this way. Our method more closely matches what an old-school gamer might expect: the ball and its shadow are both sprites, while the grid is a static background. Both the ball and shadow are created as a set of eight images, since color cycling is not as feasible a trick on the JavaScript canvas ([it has been implemented][Huckaby], but it is complex and costly).
 
-The way we are most unlike Boing! is in the way we render the ball itself. Boing! used a single image and careful color cycling to provide the illusion of motion. This isn't really feasible in JavaScript: color cycling *has* been implemented, but the Amiga did it in hardware, and JavaScript just doesn't. So instead, we draw eight frames of animation, and cycle through them. Note that we do still tie the ball's spinning to its position on the x-axis, just as Boing! did.
+Despite the differences in the real-time system, we do still attempt to mirror Boing! when feasible. The graphics are drawn programmatically as the demonstration begins, just like Boing!'s (even though we have more pictures to render). We still fundamentally move 2-D sprites in a plane, even though the result is designed to look like 3-D. We even still draw the shadow before the grid, rather than the other way around: it looks like the shadow is transparent and the grid is opaque, but it's actually the opposite.
 
-- Although we draw to the same resolution that Boing! did (320/200), we do not scale to the full screen size that Boing! did.
-- The size of jsBoing's "world" is very slightly different: close to what Boing! used, but off by a pixel or two in order to make the dimensions into prime numbers. This drastically cuts the repetitiveness of the animation. The speed of jsBoing's ball is also very slightly different, for the same reason.
-- The background/floor should look familiar -two sides of a cube, carved into a 15x15 grid- but we draw the entire floor grid (Boing! only draws part of it). This is done once, when the page loads.
-- The original demo used only a single image for the ball, using color-cycling on its palette to provide the illusion of motion. This isn't impossible with the HTML5 Canvas, but the amount of code it takes makes it infeasible, so we take a different approach: 
+We also allow you to "pull back the curtain" in certain ways, to better understand how the cheats work.
 
-Why JavaScript?
+What's the same as Boing?
+=========================
+Although we do have to depart from Boing! in a number of ways, we try to stay similar where feasible (and sensible).
+- The system is fundamentally 2-D, using pre-rendered sprites that make it look like 3-D.
+- All graphics are rendered programmatically at boot time: there are no additional images to download.
+- We do not make use of transparency, other the simple binary/opaque sort of transparency that the Amiga used.
+- Physics, like rendering, is locked to the frame rate: slow the rendering, slow the animation.
+
+Why do this?
+============
+Mostly because I wanted to learn more about graphics, physics, and demos. It's been a blast.
+
+License
+=======
+This code is dedicated to the public domain wherever feasible, under the [Creative Commons Zero 1.0 Universal Public Domain Dedication][CC0].
+
+Acknowledgments
 ===============
-Partly because I'm comfortable with it. Partly for the challenge: JavaScript engine performance has improved greatly over the past few years, but it is still not considered a high-performance environment, and I wanted to see if I could make a JavaScript version still run smoothly.
+Very special thinks to [Robert J. Mical][Mical] and Dale Luck, for the original Boing! demo.
 
-I had one other reason. It seems to me that JavaScript is becoming a sort of lingua franca of the coding world. By expressing the Boing! algorithms in it, I hoped to put them into a form that more people could understand.
+Thanks to Jimmy Maher for [his re-creation of Boing! in C][Maher]. I didn't wind up using any significant code, but it was invaluable in figuring out some of the fiddly particulars.
 
-It's also interesting as an illustrative difference of just how far computing has come, and what advantages the browser environment gives us. The original Boing! was written using just over 3000 lines of uncommented assembly language. Not counting HTML and CSS, jsBoing comes in at less than 1000 lines, and that's with significant commenting.
+Thanks to Jim Brooks for [the Boing xscreensaver demo][Brooks], and to "Cuthbert" from Khan Academy for [his Processing.js adaptation][Cuthbert]. Again, I wound up not really reusing much, but their code was still valuable for researching certain effects.
 
-And yet, it's also interesting as a reminder of exactly what those luxuries cost us. Boing! is *still* smoother, even on a machine two orders of magnitude slower.
+Thanks to Michael J. Norton, for [his article on simple software 3D rendering pipelines][Norton]. My final code wound up not looking so much like it (even if you discount the differences between Tcl and JavaScript), but much of the early code did. These were the first seeds that made this possible.
 
-Why not WebGL?
-==============
-Because this was an attempt to stay fairly faithful to the spirit of the Boing! demo. WebGL would undoubtedly be faster, and also a more accurate recreation of what the scene suggested by Boing! might actually look like, and be considerably more flexible in what it can do. But that wasn't our goal, because among other things, it would involve playing fair.
-
-That said, we *are* looking to do an OpenGL-based recreation as well. A WebGL recreation would be a complement to this, not a replacement for it. We are also looking to do an SVG-based version. These are, however, later projects.
-
-How do you get this running so quickly?
-=======================================
-The same way Boing did: shameless, brazen cheating.
-
-The biggest secret (which is also true of Boing!) is that this is not actually a 3-D system. It's a 2-D system that uses some pre-rendered sprites: we render them at boot time, yes, but they're not the realtime 3-D graphics that they might seem to be at first glance.
-
-The secret to quick responsiveness is that we start the world before all of
-our assets are in place. On the first 17 frames, we create the background grid and the ball sprites. Since we return to the event loop after each of these frames, the browser continues to respond.
-
-Special Thanks To...
-====================
-- R.J. Mical and Dale Luck, for the original Boing! demo.
-- Michael J. Norton, for his article "Build a Simple 3D Pipeline in Tcl", which provided some initial inspiration and help with equations.
-- Jimmy Maher, author of *The Future Was Here*, a text that included a wealth of information on the Amiga and a re-creation of Boing! in C. The assembly-language source to the original Boing! can also be found at his Website.
-
-=======
-jsboing
-=======
-
-Yet another Boing! clone
->>>>>>> 51ffb8efaee64711086c36ab9d622ee4ec8b560d
+[Brooks]: <http://www.jimbrooks.org/programming/opengl/boing/> "OpenGL Amiga Boing"
+[CC0]: <https://creativecommons.org/publicdomain/zero/1.0/> "Creative Commons Zero 1.0 Universal"
+[Cuthbert]: <https://www.khanacademy.org/cs/amiga-ball/6260170543857664> "Amiga Ball"
+[Huckaby]: <http://www.effectgames.com/effect/article.psp.html/joe/Old_School_Color_Cycling_with_HTML5> "Old School Color Cycling with HTML5"
+[Maher]: <http://amiga.filfire.net/?page_id=5> "The Future Was Here, Chapter 2"
+[Mical]: <http://mical.org> "RJ Mical Page"
+[Norton]: <http://www.macdevcenter.com/pub/a/mac/2005/08/12/tcl.html> "Build a Simple 3D Pipeline in Tcl"
