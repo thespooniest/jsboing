@@ -9,7 +9,7 @@ MAIN:=$(BUILDDIR)/boing.js
 
 RHINO:=rhino
 JSLINT:=$(RHINO) bin/lint.js
-JSLINTFLAGS:=-fbrowser-globals -Wno-bitwise-operators -Ddefine -Drequire
+JSLINTFLAGS:=-fbrowser-globals -Wno-bitwise-operators -Ddefine -Drequire -Dconsole
 
 YUICOMPRESSOR:=yui-compressor
 YCFLAGS:=

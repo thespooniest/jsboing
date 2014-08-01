@@ -568,7 +568,7 @@ define('ruy', ['exports'], function (exports) {
 define('pipeline3D', ['ruy', 'exports'], function (ruy, exports) {
     "use strict";
 
-    var min = Math.min;
+    //var min = Math.min;
 
     function Material() {
         this.ambient = null;
@@ -697,7 +697,6 @@ define('pipeline3D', ['ruy', 'exports'], function (ruy, exports) {
             ),
             finalX,
             finalY;
-        //pointPrime[2] += 10;
         finalX = (canvas.width / 2) + (pointPrime[0] * d / pointPrime[2]);
         finalY = (canvas.height / 2) + (pointPrime[1] * d / pointPrime[2]);
         return [finalX, finalY, pointPrime[2]];
@@ -740,51 +739,32 @@ define('pipeline3D', ['ruy', 'exports'], function (ruy, exports) {
                     rotationMatrix,
                     canvas
                 );
-                /*var p = projectOrthographic(
-                    point,
-                    //[dFactor, dFactor, dFactor],
-                    [10, 10, 10],
-                    [0, 0, 0]
-                );*/
                 return [p[0] | 0, p[1] | 0];
             }),
             faces = model.faces.slice(0);
-        // Sort the faces so that back-most faces get sorted first.
-        faces.sort(function (a, b) {
-            var za = min.apply(undefined, a.vertices.map(function (point) {
-                    return model.vertices[point][2];
-                })),
-                zb = min.apply(undefined, b.vertices.map(function (point) {
-                    return model.vertices[point][2];
-                }));
-            if (za < zb) {
-                return 1;
-            }
-            if (za > zb) {
-                return -1;
-            }
-            return 0;
-        });
         faces.forEach(function (face) {
             var i = 1,
                 vertices = face.vertices,
                 stop = vertices.length;
             context.beginPath();
-            context.fillStyle = face.material.ambient;
-            context.moveTo(
-                (projected[vertices[0]][0] | 0) + 0.5,
-                (projected[vertices[0]][1] | 0) + 0.5
-            );
-            while (i < stop) {
-                context.lineTo(
-                    (projected[vertices[i]][0] | 0) + 0.5,
-                    (projected[vertices[i]][1] | 0) + 0.5
+            if (projected[vertices[1]][0] < projected[vertices[2]][0]) {
+                // Cull all backfaces.
+                context.fillStyle = face.material.ambient;
+                context.moveTo(
+                    (projected[vertices[0]][0] | 0) + 0.5,
+                    (projected[vertices[0]][1] | 0) + 0.5
                 );
-                i = i + 1;
+                while (i < stop) {
+                    context.lineTo(
+                        (projected[vertices[i]][0] | 0) + 0.5,
+                        (projected[vertices[i]][1] | 0) + 0.5
+                    );
+                    i = i + 1;
+                }
+                context.closePath();
+                context.fill();
+                //context.stroke();
             }
-            context.closePath();
-            context.fill();
-            //context.stroke();
         });
     }
 
