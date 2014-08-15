@@ -190,19 +190,8 @@ define('assets', ['pipeline3D', 'exports'], function (pipeline3D, exports) {
                 currentFace.vertices = [
                     current,
                     currentDown,
-                    currentDownNext
-                ];
-                if (!!drawAlternate) {
-                    currentFace.material = exports.materials.ballA;
-                } else {
-                    currentFace.material = exports.materials.ballB;
-                }
-                result.faces.push(currentFace);
-                currentFace = new pipeline3D.Face();
-                currentFace.vertices = [
                     currentDownNext,
-                    currentNext,
-                    current
+                    currentNext
                 ];
                 if (!!drawAlternate) {
                     currentFace.material = exports.materials.ballA;

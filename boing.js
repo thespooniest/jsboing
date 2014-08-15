@@ -702,13 +702,25 @@ define('pipeline3D', ['ruy', 'exports'], function (ruy, exports) {
         return [finalX, finalY, pointPrime[2]];
     }
 
-    function isBackface(vertices, face) {
-        /*jslint unparam:true*/
-        return false;
+    function getMaxZ(points, indices) {
+        return Math.max.apply(
+            undefined,
+            indices.map(
+                function (i) {
+                    return points[i][2];
+                }
+            )
+        );
     }
 
     function drawModelFlat(canvas, model, dFactor, rotationMatrix) {
         var context = canvas.getContext("2d"),
+            rotated = model.vertices.map(function (point) {
+                return ruy.gemv(
+                    rotationMatrix,
+                    point
+                );
+            }),
             projected = model.vertices.map(function (point) {
                 var p = project(
                     point,
@@ -719,30 +731,38 @@ define('pipeline3D', ['ruy', 'exports'], function (ruy, exports) {
                 return [p[0] | 0, p[1] | 0, p[2] | 0];
             }),
             faces = model.faces.slice(0);
-        console.debug(projected);
+        // Sort the faces back-to-front, per the painter's algorithm.
+        faces.sort(
+            function (a, b) {
+                return getMaxZ(
+                    rotated,
+                    a.vertices
+                ) - getMaxZ(
+                    rotated,
+                    b.vertices
+                );
+            }
+        );
         faces.forEach(function (face) {
             var i = 1,
                 vertices = face.vertices,
                 stop = vertices.length;
             context.beginPath();
-            if (!isBackface(vertices, face)) {
-                // Cull all backfaces.
-                context.fillStyle = face.material.ambient;
-                context.moveTo(
-                    (projected[vertices[0]][0] | 0) + 0.5,
-                    (projected[vertices[0]][1] | 0) + 0.5
+            context.fillStyle = face.material.ambient;
+            context.moveTo(
+                (projected[vertices[0]][0] | 0) + 0.5,
+                (projected[vertices[0]][1] | 0) + 0.5
+            );
+            while (i < stop) {
+                context.lineTo(
+                    (projected[vertices[i]][0] | 0) + 0.5,
+                    (projected[vertices[i]][1] | 0) + 0.5
                 );
-                while (i < stop) {
-                    context.lineTo(
-                        (projected[vertices[i]][0] | 0) + 0.5,
-                        (projected[vertices[i]][1] | 0) + 0.5
-                    );
-                    i = i + 1;
-                }
-                context.closePath();
-                context.fill();
-                context.stroke();
+                i = i + 1;
             }
+            context.closePath();
+            context.fill();
+            //context.stroke();
         });
     }
 
@@ -1039,19 +1059,8 @@ define('assets', ['pipeline3D', 'exports'], function (pipeline3D, exports) {
                 currentFace.vertices = [
                     current,
                     currentDown,
-                    currentDownNext
-                ];
-                if (!!drawAlternate) {
-                    currentFace.material = exports.materials.ballA;
-                } else {
-                    currentFace.material = exports.materials.ballB;
-                }
-                result.faces.push(currentFace);
-                currentFace = new pipeline3D.Face();
-                currentFace.vertices = [
                     currentDownNext,
-                    currentNext,
-                    current
+                    currentNext
                 ];
                 if (!!drawAlternate) {
                     currentFace.material = exports.materials.ballA;

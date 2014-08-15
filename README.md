@@ -34,7 +34,7 @@ Mostly because I wanted to learn more about graphics, physics, and demos. It's b
 
 Issues
 ------
-Backface culling is still not working right, especially at non-default pitch.
+None known at this time.
 
 License
 -------
